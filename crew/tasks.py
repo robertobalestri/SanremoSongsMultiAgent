@@ -97,7 +97,7 @@ task_song_creation = Task(
           - **Coinvolgimento**: Creare testi che siano avvincenti e mantengano l'interesse dell'ascoltatore per tutta la durata.
           - **Fantasia**: Non citare il genere musicale, non citare clichè, non citare la biografia, non basarsi su frasi fatte e su luoghi comuni.
         - **Struttura**:
-          La canzone dovrebbe avere una struttura chiara che includa strofe, ritornelli e bridge, seguendo una narrazione coerente. Utilizzare tag come [VERSE], [CHORUS], [BRIDGE], [SPECIAL], [OUTRO], ecc., per delineare le diverse sezioni.
+          La canzone dovrebbe avere una struttura chiara che includa strofe, ritornelli e bridge, seguendo una narrazione coerente. Utilizzare tag come [VERSE], [CHORUS], [BRIDGE], [SPECIAL], [OUTRO], ecc., per delineare le diverse sezioni. Non numerare le sezioni, per esempio, non scrivere "Verse 1", "Verse 2", ecc.
     """),
     expected_output=dedent(f"""
         Una canzone in ITALIANO che emuli accuratamente lo stile del musicista e incorpori i temi creativi forniti. 
