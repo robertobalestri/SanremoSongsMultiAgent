@@ -91,7 +91,7 @@ task_song_creation = Task(
           - **Temi**: Incorporare i temi creativi e le narrazioni forniti.
           - **Originalità**: Garantire che i testi siano originali e evitare frasi ripetitive e banali. E' ammesso che i ritornelli siano uguali.
           - **Coinvolgimento**: Creare testi che siano avvincenti e mantengano l'interesse dell'ascoltatore per tutta la durata.
-
+          - **Fantasia**: Non citare il genere musicale, non citare clichè, non citare la biografia, non basarsi su frasi fatte e su luoghi comuni.
         - **Struttura**:
           La canzone dovrebbe avere una struttura chiara che includa strofe, ritornelli e bridge, seguendo una narrazione coerente. Utilizzare tag come [VERSE], [CHORUS], [BRIDGE], [SPECIAL], [OUTRO], ecc., per delineare le diverse sezioni.
     """),
@@ -119,7 +119,7 @@ task_song_evaluation = Task(
             - **Liricità**: Analizzare la creatività e la qualità poetica dei testi.
             - **Profondità**: Valutare la profondità emotiva e tematica dei testi.
             - **Coesione**: Assicurarsi che i testi formino una narrativa o un tema coerente e consistente.
-            - **Originalità**: Valutare l'unicità e l'originalità dei testi.
+            - **Originalità**: Valutare l'unicità e l'originalità dei testi. Non deve esser epresente il genere musicale, la biografia, frasi fatte o luoghi comuni.
             - **Immagini**: Verificare l'uso di immagini vivide ed evocative.
             - **Chiarezza**: Assicurarsi che i testi siano chiari e facilmente comprensibili.
             - **Rilevanza**: Valutare se i testi sono pertinenti al messaggio o al tema della canzone.
