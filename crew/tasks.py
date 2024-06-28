@@ -178,11 +178,11 @@ task_generate_music_description = Task(
         - **Dettagli da Includere**:
           - Catturare l'essenza dello stile della canzone e il suo impatto emotivo.
           - Incorporare elementi chiave dalla biografia del musicista e dai testi della canzone.
-          - Tipo di voce (anche se maschile o femminile)
+          - Tipo di voce (indica sempre se maschile o femminile)
 
         - **Esempi**:
-          - "A soulful pop ballad blending classical influences with synths. 90s sounds."
-          - "Energetic rock anthem, distortion, rough voice."
+          - "A soulful pop ballad blending classical influences with synths. 90s sounds. Female voice"
+          - "Energetic rock anthem, distortion, rough male voice."
     """),
     
     expected_output=dedent(f"""
