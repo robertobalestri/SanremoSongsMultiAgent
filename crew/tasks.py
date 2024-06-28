@@ -58,7 +58,7 @@ task_creative_theme_generation = Task(
 
         - **Obiettivo**:
           - Produrre un tema unico e immaginativo per una canzone che catturi l'essenza dello stile del musicista senza riferimenti diretti alla biografia.
-          - Essere originali e creativi, evitare i cliché e garantire che i temi siano coinvolgenti e freschi.
+          - Essere originali e creativi, evitare i cliché e garantire che i temi siano coinvolgenti e freschi. Evitare di essere politicamente corretti.
 
         - **Dettagli da Includere**:
           - **Tema**: Creare un tema e una narrativa inventivi che possano essere utilizzati nella canzone.
@@ -70,6 +70,7 @@ task_creative_theme_generation = Task(
           - Tema: "Un uomo che comunica con le piante". Genere: "Folk acustico con un tocco di psichedelia".
           - Tema: "Storia d'amore ironica tra un robot e un umano". Genere: "Synth-pop con un tocco retro-futuristico".
           - Tema: "Visione ironica della situazione politica italiana". Genere: "Rap con un tocco di satira".
+          - "Storia di una notte di sesso" Genere: "soul"
     """),
     
     expected_output=dedent(f"""
@@ -85,7 +86,9 @@ task_creative_theme_generation = Task(
 task_song_creation = Task(
     description=dedent(f"""    
         - **Scopo**: 
-          - Creare una canzone originale e di alta qualità in ITALIANO, emulando lo stile del musicista basato sul tema fornito in "{generated_themes_path}". Lo scopo è far partecipare la canzone al festival di Sanremo.
+          - Creare una canzone originale e di alta qualità in ITALIANO, emulando lo stile del musicista basato sul tema fornito in "{generated_themes_path}". 
+          - Lo scopo è far partecipare la canzone al festival di Sanremo.
+          - Evitare assolutamente di essere troppo politicamente corretti e buonisti.
 
         - **Obiettivo**:
           - Produrre una canzone che catturi l'essenza dello stile del musicista senza riferimenti diretti alla biografia, garantendo che sia fresca, coinvolgente e priva di cliché.
