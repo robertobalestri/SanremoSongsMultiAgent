@@ -1,10 +1,17 @@
-import streamlit as st
-from langchain_openai import AzureChatOpenAI
 import os
-from dotenv import load_dotenv
-
 # Define a variable to check if we are running locally or in the cloud
 is_local = os.path.exists(".env")
+
+if not is_local:
+    __import__('pysqlite3')
+    import sys
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+
+import streamlit as st
+from langchain_openai import AzureChatOpenAI
+
+from dotenv import load_dotenv
+
 
 if is_local:
     load_dotenv()
