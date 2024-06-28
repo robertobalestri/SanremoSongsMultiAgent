@@ -1,1 +1,5 @@
 /.venv
+.env
+/data
+/crew/__pycache__
+trained_agents_data.pkl
