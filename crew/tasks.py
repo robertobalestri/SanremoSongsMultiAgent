@@ -153,7 +153,7 @@ task_song_editing = Task(
           - Migliorare la canzone affrontando i problemi o le carenze identificate durante la valutazione.
           - Assicurare la correttezza grammaticale e la coerenza stilistica.
           - Tutti i ritornelli devono essere uguali.
-          - Aggiungi i giusti accenti tonici in italiano su tutte le parole, per esempio "alcuno" diventa "alcùno", "oblio" diventa "oblìo".
+          - Aggiungi i giusti accenti tonici in italiano su tutte le parole, per esempio "alcuno" diventa "alcùno", "oblio" diventa "oblìo", "maestro" diviene "maèstro", "brindisi" diventa "brìndisi". Aggiungili solo se sicuro.
 
     """),
     
