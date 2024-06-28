@@ -17,13 +17,20 @@ if st.button("Genera Canzone"):
         
         
         # Read the output files
-        corrected_song_path = 'data/output/corrected_song.txt'
-        music_description_path = 'data/output/music_description.txt'
+        expanded_biography_output_path = f'data/output/expanded_musician_biography.txt'
+        generated_themes_path = f'data/output/generated_themes.txt'
+        generated_song_path = f'data/output/generated_song.txt'
+        song_evaluation_report_path = f'data/output/song_evaluation_report.txt'
+        corrected_song_path = f'data/output/corrected_song.txt'
+        music_description_output_path = f'data/output/music_description.txt'
+        
+        with open(expanded_biography_output_path, 'r', encoding= "utf-8") as file:
+            expanded_biography = file.readlines()
         
         with open(corrected_song_path, 'r', encoding= "utf-8") as file:
             corrected_song = file.readlines()
         
-        with open(music_description_path, 'r', encoding= "utf-8") as file:
+        with open(music_description_output_path, 'r', encoding= "utf-8") as file:
             music_description = file.readlines()
         
         corrected_song = '\n'.join(corrected_song)
@@ -31,6 +38,8 @@ if st.button("Genera Canzone"):
 
     # Display the results
     st.success("Canzone generata con successo!")
+    st.write("### Biografia Espansa")
+    st.write(expanded_biography)
     st.write("### Canzone Corretta")
     st.write(corrected_song)
     st.write("### Descrizione Musicale")
