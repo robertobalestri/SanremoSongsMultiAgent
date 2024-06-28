@@ -37,8 +37,7 @@ task_expanded_biography_generation = Task(
     """),
     
     expected_output=dedent(f"""
-        Una biografia dettagliata ed estesa del musicista in ITALIANO, che copre:
-          - Interessi unici, successi passati e altre informazioni di background rilevanti.
+        Una biografia dettagliata ed estesa del musicista in ITALIANO.
         La biografia dovrebbe essere completa, dettagliata e fornire una comprensione completa della vita e della carriera del musicista.
         La risposta non deve contenere altre parole oltre a quelle richieste.
         """),
@@ -54,6 +53,7 @@ task_creative_theme_generation = Task(
           Lo scopo è far partecipare la canzone al festival di Sanremo.
           Nel caso in cui siano presenti dei temi tra i tag [TEMA] e [/TEMA], devi assolutamente aderire ad essi per creare il tema della canzone.
           [TEMA]{{theme}}[/TEMA]
+          Se i temi proposti sono terreni, veri, perfavore mantienili e non inventarne di nuovi, segui la vita che trasuda dai temi forniti dall'utente. Anche se parlano di sesso, morte, droga, violenza, devi seguire quei temi.
           
 
         - **Obiettivo**:
@@ -70,7 +70,7 @@ task_creative_theme_generation = Task(
           - Tema: "Un uomo che comunica con le piante". Genere: "Folk acustico con un tocco di psichedelia".
           - Tema: "Storia d'amore ironica tra un robot e un umano". Genere: "Synth-pop con un tocco retro-futuristico".
           - Tema: "Visione ironica della situazione politica italiana". Genere: "Rap con un tocco di satira".
-          - "Storia di una notte di sesso" Genere: "soul"
+          - Tema: "Storia di una notte di sesso sporco tra due barboni" Genere: "Soul"
     """),
     
     expected_output=dedent(f"""

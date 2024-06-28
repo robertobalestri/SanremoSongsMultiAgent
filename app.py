@@ -31,6 +31,9 @@ if st.button("Genera Canzone"):
         
         with open(expanded_biography_output_path, 'r', encoding= "utf-8") as file:
             expanded_biography = file.readlines()
+            
+        with open(generated_themes_path, 'r', encoding= "utf-8") as file:
+            generated_themes = file.readlines()
         
         with open(corrected_song_path, 'r', encoding= "utf-8") as file:
             corrected_song = file.readlines()
@@ -39,6 +42,7 @@ if st.button("Genera Canzone"):
             music_description = file.readlines()
         
         expanded_biography = '\n'.join(expanded_biography)
+        generated_themes = '\n'.join(generated_themes)
         corrected_song = '\n'.join(corrected_song)
         music_description = '\n'.join(music_description)
 
@@ -46,11 +50,14 @@ if st.button("Genera Canzone"):
     st.success("Canzone generata con successo!")
     st.write("### Biografia Espansa")
     st.write(expanded_biography)
-    st.write("### Canzone Corretta")
+    st.write("### Tema della canzone")
+    st.write(generated_themes)
+    st.write("### Testo della Canzone")
     st.write(corrected_song)
     st.write("### Descrizione Musicale")
     st.write(music_description)
-
+    
+    st.write("Vai qui e crea il brano: [Crea il brano](https://suno.com/create)")
 # Display usage metrics
 st.write("### Metriche di Utilizzo")
 st.write(main_crew.usage_metrics)
