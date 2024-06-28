@@ -127,7 +127,7 @@ task_song_evaluation = Task(
             - **Pacing**: Verificare il flusso e il ritmo dei testi, assicurando un buon equilibrio tra strofe e ritornelli.
             - **Grammatica e Sintassi**: Identificare eventuali errori grammaticali o frasi goffe.
             - **Schema di Rima**: Valutare la coerenza e la creatività dello schema di rima.
-            - **Coerenza**: Assicurarsi che il tono e lo stile rimangano coerenti per tutta la canzone.
+            - **Coerenza**: Assicurarsi che il tono e lo stile rimangano coerenti per tutta la canzone. Tutti i ritornelli devono essere uguali.
     """),
     expected_output=dedent(f"""
         Un rapporto di valutazione dettagliato della canzone generata.
@@ -148,6 +148,9 @@ task_song_editing = Task(
         - **Obiettivo**:
           - Migliorare la canzone affrontando i problemi o le carenze identificate durante la valutazione.
           - Assicurare la correttezza grammaticale e la coerenza stilistica.
+          - Tutti i ritornelli devono essere uguali.
+          - Aggiungi i giusti accenti tonici in italiano su tutte le parole, per esempio "alcuno" diventa "alcùno", "oblio" diventa "oblìo".
+
     """),
     
     expected_output=dedent(f"""

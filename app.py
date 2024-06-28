@@ -33,6 +33,7 @@ if st.button("Genera Canzone"):
         with open(music_description_output_path, 'r', encoding= "utf-8") as file:
             music_description = file.readlines()
         
+        expanded_biography = '\n'.join(expanded_biography)
         corrected_song = '\n'.join(corrected_song)
         music_description = '\n'.join(music_description)
 
