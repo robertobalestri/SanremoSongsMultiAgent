@@ -122,6 +122,8 @@ task_song_evaluation = Task(
 
         - **Dettagli da Valutare**:
           - **Monotonia**: Verificare la presenza di elementi ripetitivi o monotoni nei testi. E' ammesso che i ritornelli siano uguali.
+          - **Moralismo**: Assicurarsi che i testi non siano moralistici, didascalici o didattici.
+          - **Political Correctness**: Assicurarsi che i testi non siano assolutamente politically correct.
           - **Qualità**: Valutare la qualità complessiva dei testi, includendo:
             - **Liricità**: Analizzare la creatività e la qualità poetica dei testi.
             - **Profondità**: Valutare la profondità emotiva e tematica dei testi.
