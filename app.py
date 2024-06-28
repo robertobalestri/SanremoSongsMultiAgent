@@ -8,12 +8,17 @@ st.write("Inserisci una breve biografia del musicista e lascia che il nostro sis
 # Input field for the brief biography
 breve_biografia = st.text_area("Breve Biografia", value="Ragazza dall'anima latina, ex trans (è ritornata al proprio sesso originale di nascita), fa goth k pop con influenze bossanova. Nata come Manuela, oggi si chiama Manuela, ma fu Manuel Caproni durante quei 13 mesi da uomo. E' la prima baritono donna del mondo")
 
+st.write("Se vuoi includere un tema specifico nella canzone, scrivilo qui sotto:")
+
+# Input field for the brief biography
+tema = st.text_area("Tema", value="Cosa vuol dire essere ex trans, solo metafore stupide")
+
 # Button to start the process
 if st.button("Genera Canzone"):
     # Display a loading message
     with st.spinner("Generazione della canzone in corso..."):
         # Get your crew to work!
-        result = main_crew.kickoff(inputs={"topic": breve_biografia})
+        result = main_crew.kickoff(inputs={"topic": breve_biografia, "theme": tema})
         
         
         # Read the output files

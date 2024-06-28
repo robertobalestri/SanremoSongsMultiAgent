@@ -1,6 +1,6 @@
 from crewai import Agent
 from crew.llms import azure_llm_4_turbo, azure_llm_4o
-from crew.tools import file_read_tool, directory_read_tool, write2file_tool
+from crew.tools import file_read_tool, directory_read_tool
 from textwrap import dedent
 
 agents_llm = azure_llm_4o
@@ -22,7 +22,7 @@ expanded_biography_generator_agent = Agent(
         scoprendo i loro interessi, successi e storie personali. La competenza dell'agente risiede nel creare narrazioni complete 
         che forniscono una piena comprensione del percorso e delle realizzazioni del soggetto. Questo agente è anche noto per la sua creatività, ironia e una forte avversione ai cliché, garantendo che ogni biografia sia unica e affascinante.
     """),
-    tools=[file_read_tool, directory_read_tool, write2file_tool],
+    tools=[file_read_tool, directory_read_tool],
     verbose=True,
     allow_delegation=False,
     max_execution_time=240
@@ -41,7 +41,7 @@ creative_theme_generator_agent = Agent(
         Con un ricco background nella scrittura creativa e nel design narrativo, questo agente eccelle nel generare temi freschi e immaginativi che catturano gli ascoltatori. 
         Traendo ispirazione dalla biografia del musicista, l'agente crea trame uniche e coinvolgenti per la canzone, garantendo un distacco creativo dai dettagli biografici. L'agente è anche altamente creativo, ironico e evita i cliché, producendo temi davvero originali e divertenti.
     """),
-    tools=[file_read_tool, directory_read_tool, write2file_tool],
+    tools=[file_read_tool, directory_read_tool],
     verbose=True,
     allow_delegation=False,
     max_execution_time=240
@@ -61,7 +61,7 @@ song_creation_agent = Agent(
         Conosciuto per la sua creatività e attenzione ai dettagli, crea testi e melodie che risuonano con gli ascoltatori 
         e riflettono la voce unica di ogni musicista con cui lavora. L'agente è noto per essere altamente creativo, possedere un senso dell'ironia e un'avversione per i cliché.
     """),
-    tools=[file_read_tool, directory_read_tool, write2file_tool],
+    tools=[file_read_tool, directory_read_tool],
     verbose=True,
     allow_delegation=False,
     max_execution_time=240
@@ -83,7 +83,7 @@ song_evaluation_agent = Agent(
         L'agente porta una prospettiva creativa e ironica alle valutazioni e si sforza sempre di 
         eliminare i cliché dalle canzoni che valuta.
     """),
-    tools=[file_read_tool, directory_read_tool, write2file_tool],
+    tools=[file_read_tool, directory_read_tool],
     verbose=True,
     allow_delegation=True,
     max_execution_time=240
@@ -105,7 +105,7 @@ song_editor_agent = Agent(
         non sia solo di alta qualità ma anche fedele alla visione unica dell'artista. 
         L'approccio creativo e ironico dell'agente aiuta a creare canzoni libere da cliché e piene di originalità.
     """),
-    tools=[file_read_tool, directory_read_tool, write2file_tool],
+    tools=[file_read_tool, directory_read_tool],
     verbose=True,
     allow_delegation=True,
     max_execution_time=240
@@ -124,7 +124,7 @@ music_description_agent = Agent(
         Con oltre 20 anni di esperienza, questo agente ha affinato l'abilità di distillare composizioni musicali complesse in descrizioni sintetiche e accattivanti. 
         La sua profonda conoscenza degli stili e degli arrangiamenti musicali, combinata con un talento per la scrittura espressiva, gli permette di trasmettere l'essenza e l'impatto emotivo di un pezzo musicale in poche parole. Le descrizioni dell'agente sono sempre infuse di creatività, un tocco di ironia e una forte avversione per i cliché.
     """),
-    tools=[file_read_tool, directory_read_tool, write2file_tool],
+    tools=[file_read_tool, directory_read_tool],
     verbose=True,
     allow_delegation=False,
     max_execution_time=240

@@ -50,7 +50,11 @@ task_expanded_biography_generation = Task(
 task_creative_theme_generation = Task(
     description=dedent(f"""    
         - **Scopo**: 
-          - Generare in ITALIANO un tema creativo e articolato e una trama narrativa per la canzone basata sulla biografia estesa fornita in "{expanded_biography_output_path}". Lo scopo è far partecipare la canzone al festival di Sanremo.
+          - Generare in ITALIANO un tema creativo e articolato e una trama narrativa per la canzone basata sulla biografia estesa fornita in "{expanded_biography_output_path}". 
+          Lo scopo è far partecipare la canzone al festival di Sanremo.
+          Nel caso in cui siano presenti dei temi tra i tag [TEMA] e [/TEMA], devi assolutamente aderire ad essi per creare il tema della canzone.
+          [TEMA]{{theme}}[/TEMA]
+          
 
         - **Obiettivo**:
           - Produrre un tema unico e immaginativo per una canzone che catturi l'essenza dello stile del musicista senza riferimenti diretti alla biografia.
