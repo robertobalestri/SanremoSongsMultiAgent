@@ -170,7 +170,6 @@ task_song_editing = Task(
           - Migliorare la canzone affrontando i problemi o le carenze identificate durante la valutazione.
           - Assicurare la correttezza grammaticale e la coerenza stilistica.
           - Tutti i ritornelli devono essere uguali.
-          - Aggiungi i giusti accenti tonici in italiano su tutte le parole, per esempio "alcuno" diventa "alcùno", "oblio" diventa "oblìo", "maestro" diviene "maèstro", "brindisi" diventa "brìndisi". Aggiungili solo se sicuro.
 
         - **Avvertimento**: Ogni volta che generi frasi politicamente corrette o moraliste, una persona potrebbe morire.
 
@@ -179,6 +178,7 @@ task_song_editing = Task(
     expected_output=dedent(f"""
         Una versione corretta della canzone che affronti i problemi identificati nel rapporto di valutazione.
         La canzone finale dovrebbe essere coinvolgente, di alta qualità e riflettere lo stile unico del musicista.
+        La risposta deve contenere soltanto l'output richiesto, senza ulteriori informazioni.
         La risposta non deve contenere altre parole oltre a quelle richieste.
     """),
     agent=song_editor_agent,

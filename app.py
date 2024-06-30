@@ -4,7 +4,7 @@ from config import IS_LOCAL, EXPANDED_BIOGRAPFY_OUTPUT_PATH, GENERATED_THEMES_PA
 from crew.crew import main_crew
 from src.llms_not_in_crew import regenerate_lines
 from st_aggrid import AgGrid, GridOptionsBuilder, DataReturnMode, AgGridTheme
-import time
+from streamlit_monaco import st_monaco
 
 # Set page configuration for wide layout
 st.set_page_config(layout="wide")
@@ -46,6 +46,8 @@ def initialize_session_state():
         st.session_state.grid_data = pd.DataFrame()
     if 'first_run' not in st.session_state:
         st.session_state.first_run = True
+    if 'editor_content' not in st.session_state:
+        st.session_state.editor_content = ""
 
 def reset_checkboxes():
     for i in st.session_state.song_lines:
@@ -60,7 +62,7 @@ def read_file(file_path):
 def generate_song_files(breve_biografia, tema):
     with st.spinner("Generazione della canzone in corso..."):
         # Simulate generating the song and related data
-        result = main_crew.kickoff(inputs={"topic": breve_biografia, "theme": tema})
+        #result = main_crew.kickoff(inputs={"topic": breve_biografia, "theme": tema})
         pass
     expanded_biography_output_path = EXPANDED_BIOGRAPFY_OUTPUT_PATH
     generated_themes_path = GENERATED_THEMES_PATH
@@ -85,6 +87,7 @@ def generate_song(breve_biografia, tema):
     }
     st.session_state.music_description = music_description
     st.session_state.first_run = False  # Set first_run to False after generating the song
+    st.session_state.editor_content = "\n".join([line_data['current'] for line_data in st.session_state.song_lines.values()])
 
 def update_session_state_from_grid(grid_data):
     reordered_song_lines = {}
@@ -94,6 +97,7 @@ def update_session_state_from_grid(grid_data):
         reordered_song_lines[new_index]['current'] = row['Line']
         reordered_song_lines[new_index]['to_regenerate'] = row['Regenerate']
     st.session_state.song_lines = reordered_song_lines
+    st.session_state.editor_content = "\n".join([line_data['current'] for line_data in reordered_song_lines.values()])
 
 def display_generated_song():
     st.sidebar.write("### Biografia Espansa")
@@ -110,14 +114,23 @@ def display_generated_song():
         col1x, col1empty, col1y = st.columns([1, 2, 1])
 
         with col1x:
-            # Add a hidden button
-            trigger_rerun = st.button("Refresh", key="rerun_button")
+            if st.button("Aggiungi Linea Vuota"):
+                new_index = len(st.session_state.song_lines)
+                st.session_state.song_lines[new_index] = {
+                    "original": "",
+                    "current": "",
+                    "regeneration_count": 0,
+                    "to_regenerate": False,
+                    "to_be_green": False
+                }
+                st.session_state.editor_content = "\n".join([line_data['current'] for line_data in st.session_state.song_lines.values()])
+                st.rerun()
         with col1y:
             if st.button("Rigenera Frasi"):
                 regenerate_selected_lines()
                 reset_checkboxes()
                 st.rerun()
-
+  
         # Prepare data for AG Grid
         song_lines = [{"Index": i, "Line": f"{line_data['current']}", "Regenerate": line_data['to_regenerate']} for i, line_data in st.session_state.song_lines.items()]
         df = pd.DataFrame(song_lines)
@@ -159,8 +172,19 @@ def display_generated_song():
             st.rerun()
 
     with col2:
-        formatted_lyrics = "\n\n".join([f"<p>{line_data['current']}</p>" for line_data in st.session_state.song_lines.values()])
-        st.markdown(f'<div class="lyrics-container">{formatted_lyrics}</div>', unsafe_allow_html=True)
+        save_button = st.button("Save Lyrics")  # Button is defined first
+        content = st_monaco(value=st.session_state.editor_content, height="1200px", language="plaintext", theme="vs-light")
+
+        if save_button:  # Check if the save button is clicked
+            st.session_state.editor_content = content
+            updated_lines = content.split("\n")
+            st.session_state.song_lines = {
+                i: {"original": line, "current": line, "regeneration_count": 0, "to_regenerate": False, "to_be_green": False}
+                for i, line in enumerate(updated_lines)
+            }
+            st.session_state.grid_data = pd.DataFrame([{"Index": i, "Line": line_data["current"], "Regenerate": line_data["to_regenerate"]}
+                                                    for i, line_data in st.session_state.song_lines.items()])
+            st.rerun()  # Rerun the app to reflect the changes
 
 def regenerate_selected_lines():
     with st.spinner("Rigenerazione delle frasi in corso..."):

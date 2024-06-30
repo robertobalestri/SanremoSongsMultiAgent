@@ -4,3 +4,4 @@ crewai-tools
 openai
 langchain-openai
 streamlit-aggrid
+streamlit-monaco
