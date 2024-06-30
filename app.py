@@ -60,7 +60,7 @@ def read_file(file_path):
 def generate_song_files(breve_biografia, tema):
     with st.spinner("Generazione della canzone in corso..."):
         # Simulate generating the song and related data
-        # result = main_crew.kickoff(inputs={"topic": breve_biografia, "theme": tema})
+        result = main_crew.kickoff(inputs={"topic": breve_biografia, "theme": tema})
         pass
     expanded_biography_output_path = EXPANDED_BIOGRAPFY_OUTPUT_PATH
     generated_themes_path = GENERATED_THEMES_PATH
