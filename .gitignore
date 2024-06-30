@@ -3,3 +3,5 @@
 /data
 /crew/__pycache__
 trained_agents_data.pkl
+src/__pycache__/
+/__pycache__/
