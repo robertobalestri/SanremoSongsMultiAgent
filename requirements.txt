@@ -3,3 +3,4 @@ crewai
 crewai-tools
 openai
 langchain-openai
+streamlit-aggrid
