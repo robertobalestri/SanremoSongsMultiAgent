@@ -8,7 +8,6 @@ if not IS_LOCAL:
 import os
 import streamlit as st
 from langchain_openai import AzureChatOpenAI
-from langchain_groq import ChatGroq
 
 
 from dotenv import load_dotenv
@@ -21,12 +20,6 @@ if IS_LOCAL:
         api_version=os.getenv("API_VERSION"),
         deployment_name=os.getenv("DEPLOYMENT_NAME_4_TURBO"),
         temperature=1
-    )
-    
-    groq = ChatGroq(
-        temperature=1,
-        model="llama3-70b-8192",
-        api_key= os.getenv("GROQ_API_KEY"), # Optional if not set as an environment variable
     )
 
     azure_llm_4_turbo_low_temperature = AzureChatOpenAI(
@@ -67,10 +60,4 @@ else:
         api_version=st.secrets["API_VERSION"],
         deployment_name=st.secrets["DEPLOYMENT_NAME_4o"],
         temperature=1
-    )
-    
-    groq = ChatGroq(
-        temperature=1,
-        model="llama3-70b-8192",
-        api_key= st.secrets["GROQ_API_KEY"], # Optional if not set as an environment variable
     )
