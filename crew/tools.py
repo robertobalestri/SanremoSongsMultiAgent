@@ -1,7 +1,7 @@
 from crewai_tools import FileReadTool, DirectoryReadTool
 
 file_read_tool = FileReadTool()
-directory_read_tool = DirectoryReadTool(directory='data')
+directory_read_tool = DirectoryReadTool(directory='data/extracted')
 
 from crewai_tools import BaseTool
 import os
