@@ -19,3 +19,6 @@ USER_INPUT_PATH = f'data/extracted/user_input.json'
 DATABASE_ZIP_CANZONI_DIR = f'data/db_songs/'
 
 DEFAULT_SONG_NAME = "default_song"
+
+DEFAULT_BREVE_BIO = "Ragazza dall'anima latina, ex trans (è ritornata al proprio sesso originale di nascita), fa goth k pop con influenze bossanova. Nata come Manuela, oggi si chiama Manuela, ma fu Manuel Caproni durante quei 13 mesi da uomo. E' la prima baritono donna del mondo."
+DEFAULT_TEMA_CANZONE = "Cosa vuol dire essere ex trans, usando solo metafore stupide, non intellettuale, deve essere un pezzo becero."

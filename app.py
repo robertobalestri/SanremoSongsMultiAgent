@@ -39,6 +39,11 @@ def list_zip_files():
         os.makedirs(DATABASE_ZIP_CANZONI_DIR)
     return [f for f in os.listdir(DATABASE_ZIP_CANZONI_DIR) if f.endswith('.zip')]
 
+def delete_zip_file(zip_file):
+    zip_path = os.path.join(DATABASE_ZIP_CANZONI_DIR, zip_file)
+    if os.path.exists(zip_path):
+        os.remove(zip_path)
+
 def display_generated_song():
     st.sidebar.write("### Biografia Espansa")
     st.sidebar.write(st.session_state.expanded_biography)
@@ -48,7 +53,10 @@ def display_generated_song():
     st.sidebar.write(st.session_state.music_description)
     st.sidebar.write("Vai qui e crea il brano: [Crea il brano](https://suno.com/create)")
 
-    default_zip_name = st.session_state.get('selected_zip', DEFAULT_SONG_NAME).replace('.zip', '')
+    if st.session_state.selected_zip is not None:
+        default_zip_name = st.session_state.get('selected_zip', DEFAULT_SONG_NAME).replace('.zip', '')
+    else:
+        default_zip_name = DEFAULT_SONG_NAME
     
     col1, col2, col_empty = st.columns([3, 1, 2])
     with col1:
@@ -56,26 +64,27 @@ def display_generated_song():
     with col2:
         if st.button("Save Song", type='primary'):
             save_song_to_zip(zip_name)
+            st.toast(f"Song saved as {zip_name}.zip", icon="✅")
 
     col1, col2 = st.columns([3, 2])
 
     with col1:
-        col1x, col1empty, col1y = st.columns([1, 2, 1])
+        col1x, col1empty = st.columns([1, 2])
 
-        with col1y:
-            if st.button("Rigenera Frasi"):
+        with col1x:
+            if st.button("Rigenera Frasi Selezionate"):
                 regenerate_selected_lines()
                 reset_checkboxes()
                 st.rerun()
   
-        song_lines = [{"Index": i, "Line": f"{line_data['current']}", "Regenerate": line_data['to_regenerate']} for i, line_data in st.session_state.song_lines.items()]
+        song_lines = [{"Regenerate": line_data['to_regenerate'], "Index": i, "Line": f"{line_data['current']}", } for i, line_data in st.session_state.song_lines.items()]
         df = pd.DataFrame(song_lines)
 
         gb = GridOptionsBuilder.from_dataframe(df)
-        gb.configure_column("Index", rowDrag=True, rowDragManaged=True, headerCheckboxSelection=False, checkboxSelection=False, width=100, suppressMovable=True, sortable=False)
-        gb.configure_column("Line", editable=True, singleClickEdit=True, flex=1, suppressMovable=True, sortable=False)
-        gb.configure_column("Regenerate", headerCheckboxSelection=False, editable=True, width=100, suppressMovable=True, sortable=False)
-        gb.configure_grid_options(rowDragManaged=True, autoSizeStrategy='fitGridWidth', headerHeight = 0)
+        gb.configure_column("Regenerate", headerCheckboxSelection=False, editable=True, width=40, suppressMovable=True, sortable=False)
+        gb.configure_column("Index", rowDrag=True, rowDragManaged=True, headerCheckboxSelection=False, checkboxSelection=False, width=60, suppressMovable=True, sortable=False)
+        gb.configure_column("Line", editable=True, singleClickEdit=True, flex=1, suppressMovable=True, sortable=False, )
+        gb.configure_grid_options(rowDragManaged=True, autoSizeStrategy='fitGridWidth', headerHeight = 0, applyColumnDefOrder = True, rowDragEntireRow=True)
 
         grid_options = gb.build()
 
@@ -130,7 +139,7 @@ def handle_uploaded_zip():
         flush_existing_files()
         handle_zip_upload(uploaded_zip)
         update_session(zip_processed=True)
-        st.sidebar.success("Files extracted successfully!")
+        st.sidebar.toast("Files extracted successfully!", icon="📁")
 
 def handle_zip_selection(selected_zip):
     zip_path = os.path.join(DATABASE_ZIP_CANZONI_DIR, selected_zip)
@@ -159,10 +168,21 @@ def main():
 
     st.sidebar.title("Song Database")
     zip_files = list_zip_files()
-    selected_zip = st.sidebar.selectbox("Select a ZIP file to load", zip_files)
-    if st.sidebar.button("Load Selected ZIP"):
-        handle_zip_selection(selected_zip)
     
+    if zip_files:
+        selected_zip = st.sidebar.selectbox("Select a ZIP file to load", zip_files)
+        
+        col1, col2 = st.sidebar.columns([2, 1])
+        
+        with col1:
+            if st.sidebar.button("Load Selected ZIP"):
+                handle_zip_selection(selected_zip)
+        
+        with col2:
+            if st.sidebar.button("Delete Selected ZIP"):
+                delete_zip_file(selected_zip)
+                st.experimental_rerun()
+
     handle_uploaded_zip()
     
     if st.session_state.first_run:
@@ -172,6 +192,8 @@ def main():
         tema = st.text_area("Tema", value="Cosa vuol dire essere ex trans, solo metafore stupide")
         generate_button = st.button("Genera Canzone")
         if generate_button:
+            flush_existing_files()
+            update_session(breve_biografia=breve_biografia, tema=tema)
             generate_song(breve_biografia, tema)
     else:
         with st.sidebar:
@@ -182,6 +204,7 @@ def main():
             generate_button = st.button("Genera Altra Canzone")
             if generate_button:
                 flush_existing_files()
+                update_session(breve_biografia=breve_biografia, tema=tema)
                 generate_song(breve_biografia, tema)
 
     if st.session_state.song_lines:

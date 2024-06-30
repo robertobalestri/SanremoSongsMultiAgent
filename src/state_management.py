@@ -1,11 +1,9 @@
-# state_management.py
-
 import os
 import pandas as pd
 import streamlit as st
 import zipfile
 from io import BytesIO
-from config import BASE_EXTRACTED_DIR, DATABASE_ZIP_CANZONI_DIR, DEFAULT_SONG_NAME
+from config import BASE_EXTRACTED_DIR, DATABASE_ZIP_CANZONI_DIR, DEFAULT_SONG_NAME, DEFAULT_BREVE_BIO, DEFAULT_TEMA_CANZONE
 from crew.crew import main_crew
 from src.llms_not_in_crew import regenerate_lines
 from src.utils import save_user_input, check_existing_files, load_existing_files, flush_existing_files, save_expanded_biography, save_generated_themes, save_corrected_song_lines, save_music_description
@@ -31,6 +29,10 @@ def initialize_session_state():
         st.session_state.zip_processed = False
     if 'selected_zip' not in st.session_state:
         st.session_state.selected_zip = None
+    if 'breve_biografia' not in st.session_state:
+        st.session_state.breve_biografia = DEFAULT_BREVE_BIO
+    if 'tema' not in st.session_state:
+        st.session_state.tema = DEFAULT_TEMA_CANZONE
 
 def reset_checkboxes():
     for i in st.session_state.song_lines:
@@ -61,6 +63,9 @@ def generate_song(breve_biografia, tema):
         first_run=False,
         editor_content="\n".join([line.strip() for line in corrected_song_lines])
     )
+    # Update session state for breve_biografia and tema to retain user input
+    st.session_state.breve_biografia = breve_biografia
+    st.session_state.tema = tema
 
 def update_session(**kwargs):
     for key, value in kwargs.items():
@@ -141,7 +146,6 @@ def save_song_to_zip(zip_name):
         buffer.seek(0)
         with open(os.path.join(DATABASE_ZIP_CANZONI_DIR, f"{zip_name}.zip"), 'wb') as f:
             f.write(buffer.read())
-    st.sidebar.success(f"Song saved as {zip_name}.zip")
 
 def initialize_and_load_state():
     #flush_existing_files()
