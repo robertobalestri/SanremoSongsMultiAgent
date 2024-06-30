@@ -84,7 +84,7 @@ def display_generated_song():
         gb.configure_column("Regenerate", headerCheckboxSelection=False, editable=True, width=40, suppressMovable=True, sortable=False)
         gb.configure_column("Index", rowDrag=True, rowDragManaged=True, headerCheckboxSelection=False, checkboxSelection=False, width=60, suppressMovable=True, sortable=False)
         gb.configure_column("Line", editable=True, singleClickEdit=True, flex=1, suppressMovable=True, sortable=False, )
-        gb.configure_grid_options(rowDragManaged=True, autoSizeStrategy='fitGridWidth', headerHeight = 0, applyColumnDefOrder = True, rowDragEntireRow=True)
+        gb.configure_grid_options(rowDragManaged=True, autoSizeStrategy='fitGridWidth', headerHeight = 0, applyColumnDefOrder = True)
 
         grid_options = gb.build()
 
