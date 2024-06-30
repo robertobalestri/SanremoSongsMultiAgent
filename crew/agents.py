@@ -1,5 +1,5 @@
 from crewai import Agent
-from crew.llms import azure_llm_4_turbo, azure_llm_4o, groq
+from crew.llms import azure_llm_4_turbo, azure_llm_4o
 from crew.tools import file_read_tool, directory_read_tool
 from textwrap import dedent
 
