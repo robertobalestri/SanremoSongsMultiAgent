@@ -35,6 +35,8 @@ st.markdown("""
 """, unsafe_allow_html=True)
 
 def list_zip_files():
+    if not os.path.exists(DATABASE_ZIP_CANZONI_DIR):
+        os.makedirs(DATABASE_ZIP_CANZONI_DIR)
     return [f for f in os.listdir(DATABASE_ZIP_CANZONI_DIR) if f.endswith('.zip')]
 
 def display_generated_song():
