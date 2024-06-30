@@ -1,15 +1,16 @@
 from crewai import Task
+from config import IS_LOCAL, EXPANDED_BIOGRAPFY_OUTPUT_PATH, GENERATED_SONG_PATH, GENERATED_THEMES_PATH, CORRECTED_SONG_PATH, MUSIC_DESCRIPTION_OUTPUT_PATH, SONG_EVALUATION_REPORT_PATH
 from crew.agents import expanded_biography_generator_agent, creative_theme_generator_agent, song_creation_agent, song_evaluation_agent, song_editor_agent, music_description_agent
 from crew.tools import file_read_tool, directory_read_tool, write2file_tool
 from textwrap import dedent
 
 # Paths
-expanded_biography_output_path = f'data/output/expanded_musician_biography.txt'
-generated_themes_path = f'data/output/generated_themes.txt'
-generated_song_path = f'data/output/generated_song.txt'
-song_evaluation_report_path = f'data/output/song_evaluation_report.txt'
-corrected_song_path = f'data/output/corrected_song.txt'
-music_description_output_path = f'data/output/music_description.txt'
+expanded_biography_output_path = EXPANDED_BIOGRAPFY_OUTPUT_PATH
+generated_themes_path = GENERATED_THEMES_PATH
+generated_song_path = GENERATED_SONG_PATH
+song_evaluation_report_path = SONG_EVALUATION_REPORT_PATH
+corrected_song_path = CORRECTED_SONG_PATH
+music_description_output_path = MUSIC_DESCRIPTION_OUTPUT_PATH
 
 task_expanded_biography_generation = Task(
     description=dedent("""    
@@ -18,6 +19,7 @@ task_expanded_biography_generation = Task(
 
         - **Obiettivo**:
           - Produrre una biografia completa che includa il nome d'arte del musicista, interessi unici, successi passati, stile musicale e altre informazioni di background.
+          - Evitare assolutamente frasi politicamente corrette o moraliste.
 
         - **Dettagli da Includere**:
           - **Nome d'Arte**: Inventare un nome d'arte distintivo se non fornito.
@@ -26,6 +28,8 @@ task_expanded_biography_generation = Task(
           - **Interessi**: Documentare hobby insoliti, passioni e influenze che distinguono il musicista.
           - **Successi Passati**: Evidenziare traguardi unici nella carriera del musicista.
           - **Informazioni di Background**: Fornire una storia personale e professionale intrigante.
+
+        - **Avvertimento**: Ogni volta che generi frasi politicamente corrette o moraliste, una persona potrebbe morire.
 
         - **Esempi**:
           - Nome d'Arte: "Maestro"
@@ -53,16 +57,19 @@ task_creative_theme_generation = Task(
           Lo scopo è far partecipare la canzone al festival di Sanremo.
           Nel caso in cui siano presenti dei temi tra i tag [TEMA] e [/TEMA], devi assolutamente aderire ad essi per creare il tema della canzone.
           [TEMA]{{theme}}[/TEMA]
-          Se i temi proposti sono terreni, veri, perfavore mantienili e non inventarne di nuovi, segui la vita che trasuda dai temi forniti dall'utente. Anche se parlano di sesso, morte, droga, violenza, devi seguire quei temi.
+          Se i temi proposti sono terreni, veri, per favore mantienili e non inventarne di nuovi, segui la vita che trasuda dai temi forniti dall'utente. Anche se parlano di sesso, morte, droga, violenza, devi seguire quei temi.
           
 
         - **Obiettivo**:
           - Produrre un tema unico e immaginativo per una canzone che catturi l'essenza dello stile del musicista senza riferimenti diretti alla biografia.
           - Essere originali e creativi, evitare i cliché e garantire che i temi siano coinvolgenti e freschi. Evitare di essere politicamente corretti.
+          - Seguire, se presenti, le indicazioni di tema fornite, senza rielaborarle.
 
         - **Dettagli da Includere**:
           - **Tema**: Creare un tema e una narrativa inventivi che possano essere utilizzati nella canzone.
           - **Ispirazione**: Trarre ispirazione dalla biografia del musicista ma garantire un distacco creativo.
+
+        - **Avvertimento**: Ogni volta che generi frasi politicamente corrette o moraliste, una persona potrebbe morire.
 
         - **Esempi**:
           - Tema: "La storia di una penna che scrive senza intervento umano". Genere: "Elettronica con vibrazioni anni '80".
@@ -70,7 +77,7 @@ task_creative_theme_generation = Task(
           - Tema: "Un uomo che comunica con le piante". Genere: "Folk acustico con un tocco di psichedelia".
           - Tema: "Storia d'amore ironica tra un robot e un umano". Genere: "Synth-pop con un tocco retro-futuristico".
           - Tema: "Visione ironica della situazione politica italiana". Genere: "Rap con un tocco di satira".
-          - Tema: "Storia di una notte di sesso sporco tra due barboni" Genere: "Soul"
+          - Tema: "Storia di una notte di sesso sporco tra due barboni". Genere: "Soul"
     """),
     
     expected_output=dedent(f"""
@@ -87,6 +94,7 @@ task_song_creation = Task(
     description=dedent(f"""    
         - **Scopo**: 
           - Creare una canzone originale e di alta qualità in ITALIANO, emulando lo stile del musicista basato sul tema fornito in "{generated_themes_path}". 
+          - Ispirati, se presente anche al seguente tema: [TEMA]{{theme}}[/TEMA]
           - Lo scopo è far partecipare la canzone al festival di Sanremo.
           - Evitare assolutamente di essere troppo politicamente corretti e buonisti.
 
@@ -99,8 +107,11 @@ task_song_creation = Task(
           - **Originalità**: Garantire che i testi siano originali e evitare frasi ripetitive e banali. E' ammesso che i ritornelli siano uguali.
           - **Coinvolgimento**: Creare testi che siano avvincenti e mantengano l'interesse dell'ascoltatore per tutta la durata.
           - **Fantasia**: Non citare il genere musicale, non citare clichè, non citare la biografia, non basarsi su frasi fatte e su luoghi comuni.
+
+        - **Avvertimento**: Ogni volta che generi frasi politicamente corrette o moraliste, una persona potrebbe morire.
+
         - **Struttura**:
-          La canzone dovrebbe avere una struttura chiara che includa strofe, ritornelli e bridge, seguendo una narrazione coerente. Utilizzare tag come [VERSE], [CHORUS], [BRIDGE], [SPECIAL], [OUTRO], ecc., per delineare le diverse sezioni. Non numerare le sezioni, per esempio, non scrivere "Verse 1", "Verse 2", ecc.
+          La canzone dovrebbe avere una struttura chiara che includa strofe, ritornelli e bridge, seguendo una narrazione coerente. Utilizzare tag, rigorosamente in inglese, come [VERSE], [CHORUS], [BRIDGE], [SPECIAL], [OUTRO], ecc., per delineare le diverse sezioni. Non numerare le sezioni, per esempio, non scrivere "Verse 1", "Verse 2", ecc.
     """),
     expected_output=dedent(f"""
         Una canzone in ITALIANO che emuli accuratamente lo stile del musicista e incorpori i temi creativi forniti. 
@@ -119,6 +130,7 @@ task_song_evaluation = Task(
 
         - **Obiettivo**:
           - Valutare la qualità dei testi della canzone, concentrandosi su potenziali problemi e aree di miglioramento.
+          - Assicurati, se presente, che il testo segua il tema fornito: [TEMA]{{theme}}[/TEMA]
 
         - **Dettagli da Valutare**:
           - **Monotonia**: Verificare la presenza di elementi ripetitivi o monotoni nei testi. E' ammesso che i ritornelli siano uguali.
@@ -159,6 +171,8 @@ task_song_editing = Task(
           - Assicurare la correttezza grammaticale e la coerenza stilistica.
           - Tutti i ritornelli devono essere uguali.
           - Aggiungi i giusti accenti tonici in italiano su tutte le parole, per esempio "alcuno" diventa "alcùno", "oblio" diventa "oblìo", "maestro" diviene "maèstro", "brindisi" diventa "brìndisi". Aggiungili solo se sicuro.
+
+        - **Avvertimento**: Ogni volta che generi frasi politicamente corrette o moraliste, una persona potrebbe morire.
 
     """),
     
