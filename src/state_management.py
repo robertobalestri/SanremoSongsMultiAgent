@@ -3,7 +3,7 @@ import pandas as pd
 import streamlit as st
 import zipfile
 from io import BytesIO
-from config import BASE_EXTRACTED_DIR, DATABASE_ZIP_CANZONI_DIR, DEFAULT_SONG_NAME, DEFAULT_BREVE_BIO, DEFAULT_TEMA_CANZONE
+from config import BASE_EXTRACTED_DIR, DATABASE_ZIP_CANZONI_DIR, DEFAULT_SONG_NAME, DEFAULT_BREVE_BIO, DEFAULT_TEMA_CANZONE, PASSWORD
 from crew.crew import main_crew
 from src.llms_not_in_crew import regenerate_lines
 from src.utils import save_user_input, check_existing_files, load_existing_files, flush_existing_files, save_expanded_biography, save_generated_themes, save_corrected_song_lines, save_music_description
@@ -33,6 +33,14 @@ def initialize_session_state():
         st.session_state.breve_biografia = DEFAULT_BREVE_BIO
     if 'tema' not in st.session_state:
         st.session_state.tema = DEFAULT_TEMA_CANZONE
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+    if "chat_input" not in st.session_state:
+        st.session_state.chat_input = ""
+    if "user_input" not in st.session_state:
+        st.session_state.user_input = ""
+    if 'password_correct' not in st.session_state:
+        st.session_state.password_correct = False
 
 def reset_checkboxes():
     for i in st.session_state.song_lines:
@@ -61,7 +69,8 @@ def generate_song(breve_biografia, tema):
         },
         music_description=music_description,
         first_run=False,
-        editor_content="\n".join([line.strip() for line in corrected_song_lines])
+        editor_content="\n".join([line.strip() for line in corrected_song_lines]),
+        user_input=user_input
     )
     # Update session state for breve_biografia and tema to retain user input
     st.session_state.breve_biografia = breve_biografia
@@ -129,7 +138,8 @@ def handle_zip_upload(uploaded_zip):
                 music_description=music_description,
                 editor_content="\n".join([line.strip() for line in corrected_song_lines]),
                 grid_data=pd.DataFrame([{"Index": i, "Line": line.strip(), "Regenerate": False} for i, line in enumerate(corrected_song_lines)]),
-                first_run=False
+                first_run=False,
+                user_input=user_input,
             )
 
 def save_song_to_zip(zip_name):
@@ -165,5 +175,27 @@ def initialize_and_load_state():
                     music_description=music_description,
                     editor_content="\n".join([line.strip() for line in corrected_song_lines]),
                     grid_data=pd.DataFrame([{"Index": i, "Line": line.strip(), "Regenerate": False} for i, line in enumerate(corrected_song_lines)]),
-                    first_run=False
+                    first_run=False,
+                    user_input=user_input
                 )
+
+def check_password():
+    """Returns `True` if the user has the correct password."""
+    def password_entered():
+        if st.session_state["password"] == PASSWORD:
+            st.session_state.password_correct = True
+            del st.session_state["password"]  # don't store password
+        else:
+            st.session_state.password_correct = False
+        st.session_state.password_attempted = True  # Mark that an attempt was made
+
+    if "password_attempted" not in st.session_state:
+        st.session_state.password_attempted = False
+
+    if not st.session_state.get("password_correct", False):
+        st.text_input("Password", type="password", on_change=password_entered, key="password")
+        if st.session_state.password_attempted and not st.session_state.password_correct:
+            st.error("😕 Password incorrect")
+        return False
+    else:
+        return True

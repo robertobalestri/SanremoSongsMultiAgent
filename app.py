@@ -8,31 +8,12 @@ from crew.crew import main_crew
 from st_aggrid import AgGrid, GridOptionsBuilder, DataReturnMode, AgGridTheme
 from streamlit_monaco import st_monaco
 from src.utils import check_existing_files, load_existing_files, flush_existing_files
-from src.state_management import reset_checkboxes, generate_song, update_session_state_from_grid, regenerate_selected_lines, handle_zip_upload, save_song_to_zip, initialize_and_load_state, update_session
+from src.state_management import reset_checkboxes, generate_song, update_session_state_from_grid, regenerate_selected_lines, handle_zip_upload, save_song_to_zip, initialize_and_load_state, update_session, check_password
+from src.llms_not_in_crew import create_chat_response
+from src.streamlit_styling import initialize_styling
 
-# Set page configuration for wide layout
-st.set_page_config(layout="wide")
+initialize_styling()
 
-# CSS for custom styling
-st.markdown("""
-    <style>
-        .lyrics-container {
-            font-family: 'Courier New', Courier, monospace;
-            white-space: pre-wrap; /* Preserve whitespace */
-            background: #f4f4f4; /* Light grey background */
-            padding: 20px; /* Some padding for better readability */
-            border-radius: 10px; /* Rounded corners */
-            border: 1px solid #ddd; /* Light border */
-            overflow-y: auto; /* Enable vertical scrolling if needed */
-            height: 100%;
-            color: #333; /* Dark text color */
-        }
-        .lyrics-container p {
-            margin: 0; /* Remove default paragraph margin */
-            line-height: 1.5; /* Improve line spacing */
-        }
-    </style>
-""", unsafe_allow_html=True)
 
 def list_zip_files():
     if not os.path.exists(DATABASE_ZIP_CANZONI_DIR):
@@ -66,10 +47,10 @@ def display_generated_song():
             save_song_to_zip(zip_name)
             st.toast(f"Song saved as {zip_name}.zip", icon="✅")
 
-    col1, col2 = st.columns([3, 2])
+    col1, col2 = st.columns([4, 4])
 
     with col1:
-        col1x, col1empty = st.columns([1, 2])
+        col1x, col1empty = st.columns([1, 1])
 
         with col1x:
             if st.button("Rigenera Frasi Selezionate"):
@@ -160,55 +141,86 @@ def handle_zip_selection(selected_zip):
                 editor_content="\n".join([line.strip() for line in corrected_song_lines]),
                 grid_data=pd.DataFrame([{"Index": i, "Line": line.strip(), "Regenerate": False} for i, line in enumerate(corrected_song_lines)]),
                 first_run=False,
-                selected_zip=selected_zip
+                selected_zip=selected_zip,
+                user_input=user_input
             )
+
+                
+def display_chat():
+    st.subheader("Chatta con GPT e chiedi consigli per la tua canzone!")
+
+    if "chat_history" not in st.session_state:
+        st.session_state.chat_history = []
+
+    if st.session_state.chat_history:
+        st.write("Cronologia chat:")
+        for chat in st.session_state.chat_history:
+            if chat["role"] == "user":
+                st.markdown(f'''<div class="user-message">{chat['content']}</div>''', unsafe_allow_html=True)
+            else:
+                st.markdown(f'''<div class="assistant-message">{chat['content']}</div>''', unsafe_allow_html=True)
+
+    with st.form(key="chat_form"):
+        user_input = st.text_area("Chiedi a GPT:", key="chat_input")
+        chat_submit_button = st.form_submit_button(label="Invia")
+
+        if chat_submit_button and user_input:
+            with st.spinner("Caricamento in corso..."):
+                st.session_state.chat_history.append({"role": "user", "content": user_input})
+                reply = create_chat_response(st.session_state.chat_history)
+                st.session_state.chat_history.append({"role": "assistant", "content": reply})
+                st.rerun()  # Re-run to display the new messages
+            
+# app.py
 
 def main():
     initialize_and_load_state()
-
-    st.sidebar.title("Song Database")
-    zip_files = list_zip_files()
     
-    if zip_files:
-        selected_zip = st.sidebar.selectbox("Select a ZIP file to load", zip_files)
+    if check_password():
+        st.sidebar.title("Song Database")
+        zip_files = list_zip_files()
         
-        col1, col2 = st.sidebar.columns([2, 1])
-        
-        with col1:
-            if st.sidebar.button("Load Selected ZIP"):
-                handle_zip_selection(selected_zip)
-        
-        with col2:
-            if st.sidebar.button("Delete Selected ZIP"):
-                delete_zip_file(selected_zip)
-                st.experimental_rerun()
+        if zip_files:
+            selected_zip = st.sidebar.selectbox("Select a song to load", zip_files)
+            
+            col1, col2 = st.sidebar.columns(2)
+            
+            with col1:
+                if st.button("🎵 Load Song", use_container_width=True):
+                    handle_zip_selection(selected_zip)
+            
+            with col2:
+                if st.button("🗑️ Delete Song", use_container_width=True):
+                    delete_zip_file(selected_zip)
+                    st.rerun()
 
-    handle_uploaded_zip()
-    
-    if st.session_state.first_run:
-        st.title("Generatore di Canzoni")
-        st.write("Inserisci una breve biografia del musicista e lascia che il nostro sistema crei una canzone personalizzata per te.")
-        breve_biografia = st.text_area("Breve Biografia", value="Ragazza dall'anima latina, ex trans (è ritornata al proprio sesso originale di nascita), fa goth k pop con influenze bossanova. Nata come Manuela, oggi si chiama Manuela, ma fu Manuel Caproni durante quei 13 mesi da uomo. E' la prima baritono donna del mondo")
-        tema = st.text_area("Tema", value="Cosa vuol dire essere ex trans, solo metafore stupide")
-        generate_button = st.button("Genera Canzone")
-        if generate_button:
-            flush_existing_files()
-            update_session(breve_biografia=breve_biografia, tema=tema)
-            generate_song(breve_biografia, tema)
-    else:
-        with st.sidebar:
+        handle_uploaded_zip()
+        
+        if st.session_state.first_run:
             st.title("Generatore di Canzoni")
             st.write("Inserisci una breve biografia del musicista e lascia che il nostro sistema crei una canzone personalizzata per te.")
             breve_biografia = st.text_area("Breve Biografia", value="Ragazza dall'anima latina, ex trans (è ritornata al proprio sesso originale di nascita), fa goth k pop con influenze bossanova. Nata come Manuela, oggi si chiama Manuela, ma fu Manuel Caproni durante quei 13 mesi da uomo. E' la prima baritono donna del mondo")
             tema = st.text_area("Tema", value="Cosa vuol dire essere ex trans, solo metafore stupide")
-            generate_button = st.button("Genera Altra Canzone")
+            generate_button = st.button("Genera Canzone")
             if generate_button:
                 flush_existing_files()
                 update_session(breve_biografia=breve_biografia, tema=tema)
                 generate_song(breve_biografia, tema)
+        else:
+            with st.sidebar:
+                st.title("Generatore di Canzoni")
+                st.write("Inserisci una breve biografia del musicista e lascia che il nostro sistema crei una canzone personalizzata per te.")
+                breve_biografia = st.text_area("Breve Biografia", value="Ragazza dall'anima latina, ex trans (è ritornata al proprio sesso originale di nascita), fa goth k pop con influenze bossanova. Nata come Manuela, oggi si chiama Manuela, ma fu Manuel Caproni durante quei 13 mesi da uomo. E' la prima baritono donna del mondo")
+                tema = st.text_area("Tema", value="Cosa vuol dire essere ex trans, solo metafore stupide")
+                generate_button = st.button("Genera Altra Canzone")
+                if generate_button:
+                    flush_existing_files()
+                    update_session(breve_biografia=breve_biografia, tema=tema)
+                    generate_song(breve_biografia, tema)
 
-    if st.session_state.song_lines:
-        display_generated_song()
+        if st.session_state.song_lines:
+            display_generated_song()
+            display_chat()  # Add this line to display the chat UI
 
 if __name__ == "__main__":
-    main()
+        main()

@@ -1,4 +1,6 @@
 import os
+from dotenv import load_dotenv
+load_dotenv()
 
 # Define a variable to check if we are running locally or in the cloud
 IS_LOCAL = os.path.exists(".env")
@@ -6,6 +8,8 @@ if not IS_LOCAL:
     __import__('pysqlite3')
     import sys
     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+    
+PASSWORD = os.getenv("PASSWORD")
 
 # Define the paths to the input and output files
 BASE_EXTRACTED_DIR = 'data/extracted'
