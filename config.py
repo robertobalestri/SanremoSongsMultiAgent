@@ -11,7 +11,7 @@ if not IS_LOCAL:
     import sys
     sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
     
-PASSWORD = os.getenv("PASSWORD") if IS_LOCAL else st.secrets["PASSWORD"],
+PASSWORD = os.getenv("PASSWORD") if IS_LOCAL else st.secrets["PASSWORD"]
 
 # Define the paths to the input and output files
 BASE_EXTRACTED_DIR = 'data/extracted'
